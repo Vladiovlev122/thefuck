@@ -12,6 +12,11 @@ from .logs import warn, exception
 from .conf import settings
 from .system import Path
 
+branch_coverage = {
+    "branch_1" : False,
+    "branch_2" : False
+}
+
 DEVNULL = open(os.devnull, 'w')
 
 if six.PY2:
@@ -296,14 +301,15 @@ cache.disabled = False
 
 def get_installation_version():
     try:
+        branch_coverage['branch_1'] = True
         from importlib.metadata import version
 
         return version('thefuck')
     except ImportError:
+        branch_coverage["branch_2"] = True
         import pkg_resources
 
         return pkg_resources.require('thefuck')[0].version
-
 
 def get_alias():
     return os.environ.get('TF_ALIAS', 'fuck')

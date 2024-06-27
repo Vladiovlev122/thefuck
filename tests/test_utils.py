@@ -8,7 +8,9 @@ from thefuck.utils import default_settings, \
     get_all_matched_commands, is_app, for_app, cache, \
     get_valid_history_without_current, _cache, get_close_matches
 from thefuck.types import Command
-
+from thefuck.utils import get_installation_version 
+import unittest
+from thefuck.utils import branch_coverage
 
 @pytest.mark.parametrize('override, old, new', [
     ({'key': 'val'}, {}, {'key': 'val'}),
@@ -274,3 +276,18 @@ class TestGetValidHistoryWithoutCurrent(object):
     def test_get_valid_history_without_current(self, script, result):
         command = Command(script, '')
         assert get_valid_history_without_current(command) == result
+
+class TestGetInstallationVersion(unittest.TestCase):
+
+    @patch('importlib.metadata.version', unittest.mock.MagicMock(return_value='1.2.3'))
+    def test_get_installation_version_with_importlib(self):
+        version = get_installation_version()
+        self.assertEqual(version,'1.2.3')
+
+    @patch('importlib.metadata.version', side_effect=ImportError)
+    @patch('pkg_resources.require', return_value=[unittest.mock.MagicMock(version='4.5.6')])
+    def test_get_installation_version_with_pkg_resources(self, mock_require, mock_version):
+        version = get_installation_version()
+        self.assertEqual(version, '4.5.6')
+        print(f"Branch coverage: {sum(branch_coverage.values())/len(branch_coverage) * 100}% ")
+        

@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
 from subprocess import PIPE, STDOUT
-from mock import Mock
+from mock import Mock, patch
 import pytest
 from tests.utils import CorrectedCommand, Rule
 from thefuck import const
 from thefuck.exceptions import EmptyCommand
 from thefuck.system import Path
-from thefuck.types import Command
+from thefuck.types import Command, branch_coverage
 
 
 class TestCorrectedCommand(object):
@@ -152,3 +153,13 @@ class TestCommand(object):
         else:
             with pytest.raises(EmptyCommand):
                 Command.from_raw_script(script)
+
+    def test_script_parts_exception(self, mocker, caplog):
+        mocker.patch('thefuck.shells.shell.split_command', side_effect=Exception('Mocked exception'))
+        command = Command('invalid command', 'output')
+        
+        with caplog.at_level('DEBUG'):
+            parts = command.script_parts
+            assert parts == []
+
+        print(f"Branch coverage: {sum(branch_coverage.values())/len(branch_coverage) * 100}%\n")

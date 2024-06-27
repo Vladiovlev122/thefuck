@@ -8,6 +8,13 @@ from .exceptions import EmptyCommand
 from .utils import get_alias, format_raw_script
 from .output_readers import get_output
 
+branch_coverage = {
+    "branch_1" : False,
+    "branch_2" : False,
+    "branch_3" : False,
+    "branch_4" : False
+}
+
 
 class Command(object):
     """Command that should be fixed."""
@@ -35,13 +42,18 @@ class Command(object):
     @property
     def script_parts(self):
         if not hasattr(self, '_script_parts'):
+            branch_coverage['branch_1'] = True
             try:
+                branch_coverage['branch_2'] = True
                 self._script_parts = shell.split_command(self.script)
             except Exception:
+                branch_coverage['branch_3'] = True
+
                 logs.debug(u"Can't split command script {} because:\n {}".format(
                     self, sys.exc_info()))
                 self._script_parts = []
-
+        else:
+            branch_coverage['branch_4'] = True
         return self._script_parts
 
     def __eq__(self, other):
