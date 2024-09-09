@@ -14,7 +14,8 @@ try:
         module_spec.loader.exec_module(module)
         return module
 except ImportError:
-    from imp import load_source
+    # This block is no longer needed if importlib.util is always available.
+    pass
 
 
 class Settings(dict):
