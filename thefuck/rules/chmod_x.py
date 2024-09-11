@@ -3,10 +3,9 @@ from thefuck.shells import shell
 
 
 def match(command):
-    return (command.script.startswith('./')
-            and 'permission denied' in command.output.lower()
-            and os.path.exists(command.script_parts[0])
-            and not os.access(command.script_parts[0], os.X_OK))
+    return ('permission denied' in command.output.lower()
+            and os.path.exists(os.path.expanduser(command.script_parts[0]))
+            and not os.access(os.path.expanduser(command.script_parts[0]), os.X_OK))
 
 
 def get_new_command(command):
