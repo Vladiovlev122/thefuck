@@ -4,18 +4,13 @@ from warnings import warn
 from six import text_type
 from . import const
 from .system import Path
+import importlib.util
 
-try:
-    import importlib.util
-
-    def load_source(name, pathname, _file=None):
-        module_spec = importlib.util.spec_from_file_location(name, pathname)
-        module = importlib.util.module_from_spec(module_spec)
-        module_spec.loader.exec_module(module)
-        return module
-except ImportError:
-    from imp import load_source
-
+def load_source(name, pathname, _file=None):
+    module_spec = importlib.util.spec_from_file_location(name, pathname)
+    module = importlib.util.module_from_spec(module_spec)
+    module_spec.loader.exec_module(module)
+    return module
 
 class Settings(dict):
     def __getattr__(self, item):
