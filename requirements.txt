@@ -9,3 +9,5 @@ pypandoc
 pytest-benchmark
 pytest-docker-pexpect
 twine
+pathlib2
+importlib
