@@ -265,6 +265,7 @@ class TestGetValidHistoryWithoutCurrent(object):
         path_mock = mocker.Mock(iterdir=mocker.Mock(return_value=callables))
         return mocker.patch('thefuck.utils.Path', return_value=path_mock)
 
+    @pytest.mark.usefixtures('no_memoize')
     @pytest.mark.parametrize('script, result', [
         ('le cat', ['ls cat', 'diff x', u'café ô']),
         ('diff x', ['ls cat', u'café ô']),
