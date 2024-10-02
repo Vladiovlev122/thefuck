@@ -14,8 +14,10 @@ try:
         module_spec.loader.exec_module(module)
         return module
 except ImportError:
-    from imp import load_source
-
+    try:
+        from importlib.machinery import SourceFileLoader as load_source # Fix compat with Python 3.5+
+    except ImportError: # Fallback for really old (< 3.3) Python versions
+        from imp import load_source # type: ignore
 
 class Settings(dict):
     def __getattr__(self, item):
